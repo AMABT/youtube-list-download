@@ -2,10 +2,12 @@ package com.example.malecu.youtubelistdownload;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,9 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  */
 public class GetUrl extends Fragment {
 
+    protected String TAG = "GetUrl";
     protected boolean copyFromClipboardEnabled;
+    protected Activity activity;
 
     public GetUrl() {
         // Required empty public constructor
@@ -52,7 +56,17 @@ public class GetUrl extends Fragment {
                     ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
                     ((TextView) view.findViewById(R.id.yt_url)).setText(clipboard.getText());
                 } else {
-                    // call to a service that will trigger change
+                    // This makes sure that the container activity has implemented
+                    // the callback interface. If not, it throws an exception
+                    try {
+                        // send input url to parent activity
+                        OnGetUrlFragmentInteractionListener mCallback = (OnGetUrlFragmentInteractionListener) activity;
+                        EditText text = (EditText) view.findViewById(R.id.yt_url);
+                        mCallback.receiveYoutubeUrl(text.getText().toString());
+                    } catch (ClassCastException e) {
+                        throw new ClassCastException(activity.toString()
+                                + " must implement OnGetUrlFragmentInteractionListener");
+                    }
                 }
             }
         });
@@ -85,7 +99,15 @@ public class GetUrl extends Fragment {
         return view;
     }
 
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+        } else {
+            Log.e(TAG, "Activity not present on onAttach");
+        }
+    }
+
 }

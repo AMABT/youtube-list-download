@@ -23,26 +23,29 @@ import java.util.List;
 public class VideoFragment extends Fragment implements OnListFragmentInteractionListener {
 
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String YT_URL = "yt-url";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private final String TAG = "VideoFragment";
+    private String youtubeUrl = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public VideoFragment() {
-        Log.e(TAG, "VideoFragment init");
+        Log.i(TAG, "VideoFragment init");
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static VideoFragment newInstance(int columnCount) {
+    public static VideoFragment newInstance(String ytUrl) {
+
         VideoFragment fragment = new VideoFragment();
+
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(YT_URL, ytUrl);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -51,7 +54,7 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            youtubeUrl = getArguments().getString(YT_URL);
         }
     }
 
@@ -59,7 +62,8 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video_list, container, false);
 
-        Log.e(TAG, "Set adapter");
+        Log.i(TAG, "Current url " + youtubeUrl);
+        Log.i(TAG, "Set adapter");
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

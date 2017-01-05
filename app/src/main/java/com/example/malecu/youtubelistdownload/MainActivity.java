@@ -17,7 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        OnGetUrlFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,6 @@ public class MainActivity extends AppCompatActivity
 
         setContent(new GetUrl());
         fab.setVisibility(View.INVISIBLE);
-
-        //fab.setVisibility(View.VISIBLE);
-        //setContent(new VideoFragment());
     }
 
     /**
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         // If a fragment already exists there, it will be replaced with the new one
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         fragmentTransaction.replace(R.id.content_main, fragment);
         //fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.content_main));
@@ -109,6 +108,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            setContent(new GetUrl());
+            fab.setVisibility(View.INVISIBLE);
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -124,5 +128,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void receiveYoutubeUrl(String url) {
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        setContent(VideoFragment.newInstance(url));
     }
 }
