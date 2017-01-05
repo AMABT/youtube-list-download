@@ -9,6 +9,8 @@ public class Video {
     protected String url;
     protected String name;
     protected String chanel;
+    protected String length;
+    protected Quality quality;
     protected String location; // null means default value
     protected VideoStatus status;
 
@@ -17,7 +19,25 @@ public class Video {
         this.name = name;
         this.chanel = chanel;
         this.location = null;
+        this.quality = Quality.HD;
+        this.length = null;
         this.status = VideoStatus.READY;
+    }
+
+    public String getLength() {
+        return length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
+    }
+
+    public Quality getQuality() {
+        return quality;
+    }
+
+    public void setQuality(Quality quality) {
+        this.quality = quality;
     }
 
     public String getUrl() {
@@ -61,6 +81,10 @@ public class Video {
     }
 
     public enum VideoStatus {
-        READY, DOWNLOADING, DONE, CANCELED
+        READY, DOWNLOADING, DONE, CANCELED;
+    }
+
+    public enum Quality {
+        SD, HD
     }
 }

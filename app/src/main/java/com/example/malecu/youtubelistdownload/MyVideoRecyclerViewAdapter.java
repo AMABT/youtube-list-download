@@ -33,8 +33,10 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getChanel());
-        holder.mContentView.setText(mValues.get(position).getName());
+        holder.mNameView.setText(mValues.get(position).getName());
+        holder.mCanalView.setText(mValues.get(position).getChanel());
+        holder.mLengthView.setText(mValues.get(position).getLength());
+        holder.mStatusView.setText(mValues.get(position).getStatus().name());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,20 +57,24 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mNameView;
+        public final TextView mCanalView;
+        public final TextView mLengthView;
+        public final TextView mStatusView;
         public Video mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mNameView = (TextView) view.findViewById(R.id.name);
+            mCanalView = (TextView) view.findViewById(R.id.canal);
+            mLengthView = (TextView) view.findViewById(R.id.length);
+            mStatusView = (TextView) view.findViewById(R.id.status);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mNameView.getText() + "'";
         }
     }
 }

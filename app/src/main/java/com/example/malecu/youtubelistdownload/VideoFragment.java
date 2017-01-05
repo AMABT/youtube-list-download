@@ -23,13 +23,12 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class VideoFragment extends Fragment {
+public class VideoFragment extends Fragment implements OnListFragmentInteractionListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
     private final String TAG = "VideoFragment";
 
     /**
@@ -73,7 +72,7 @@ public class VideoFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyVideoRecyclerViewAdapter(getDummyContent(), mListener));
+            recyclerView.setAdapter(new MyVideoRecyclerViewAdapter(getDummyContent(), this));
         }
         return view;
     }
@@ -91,21 +90,8 @@ public class VideoFragment extends Fragment {
         return lst;
     }
 
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
+    public void onListFragmentInteraction(Video mItem) {
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 }
