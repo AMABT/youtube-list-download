@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -43,11 +44,27 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Insert video list fragment
+        setContent(new GetUrl());
+        fab.setVisibility(View.INVISIBLE);
+
+        //fab.setVisibility(View.VISIBLE);
+        //setContent(new VideoFragment());
+    }
+
+    /**
+     * Set fragment for main content
+     *
+     * @param fragment
+     */
+    protected void setContent(Fragment fragment) {
+        // Replace content layout with fragment
+        // If a fragment already exists there, it will be replaced with the new one
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.content_main, new VideoFragment());
+        fragmentTransaction.replace(R.id.content_main, fragment);
+        //fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.content_main));
+        //fragmentTransaction.add(R.id.content_main, fragment);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
