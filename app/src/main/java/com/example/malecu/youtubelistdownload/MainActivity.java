@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -60,17 +61,25 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // show start fragment - input url
-        fab.setVisibility(View.INVISIBLE);
-        findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
-        setContent(new GetUrlFragment());
-
         // init API Rest Client
         ytRestClient = new YtRestClient(getApplicationContext());
 
         // init helper
         DownloadList.get().init(getApplicationContext());
         DownloadList.get().setYtRestClient(ytRestClient);
+
+        // show start fragment - input url
+        fab.setVisibility(View.INVISIBLE);
+        findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+
+        // application started from share menu
+        if (getIntent().getAction().equals(Intent.ACTION_SEND)) {
+            String url = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            setContent(new GetUrlFragment(url));
+        } else {
+            setContent(new GetUrlFragment());
+        }
+
     }
 
     /**

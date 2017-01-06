@@ -26,10 +26,15 @@ public class GetUrlFragment extends Fragment {
     protected String TAG = "GetUrlFragment";
     protected boolean copyFromClipboardEnabled;
     protected Activity activity;
+    protected String ytUrl = null;
 
     public GetUrlFragment() {
         // Required empty public constructor
         copyFromClipboardEnabled = true;
+    }
+
+    public GetUrlFragment(String url) {
+        ytUrl = url;
     }
 
     @Override
@@ -42,7 +47,6 @@ public class GetUrlFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_get_url, container, false);
-
 
         /**
          * On submit button, get text from clipboard
@@ -72,6 +76,7 @@ public class GetUrlFragment extends Fragment {
         });
 
         EditText yt_url = (EditText) view.findViewById(R.id.yt_url);
+
         yt_url.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,6 +100,12 @@ public class GetUrlFragment extends Fragment {
 
             }
         });
+
+        if (ytUrl != null) {
+            yt_url.setText(ytUrl);
+            copyFromClipboardEnabled = false;
+            submit.setText(getString(R.string.submit_button_url));
+        }
 
         return view;
     }
