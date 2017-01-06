@@ -35,7 +35,7 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
         holder.mItem = mValues.get(position);
         holder.mNameView.setText(mValues.get(position).getName());
         holder.mCanalView.setText(mValues.get(position).getChanel());
-        holder.mLengthView.setText(mValues.get(position).getLength());
+        holder.mLengthView.setText(mValues.get(position).getLengthFormatted());
         holder.mStatusView.setText(mValues.get(position).getStatus().name());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

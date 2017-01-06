@@ -47,6 +47,18 @@ public class Video implements Parcelable {
         return length;
     }
 
+    public String getLengthFormatted() {
+        Integer seconds = Integer.parseInt(length);
+        Integer minutes = seconds / 60;
+        Integer hours = minutes / 60;
+        minutes = minutes % 60;
+        seconds = seconds % 60;
+
+        if (hours > 0)
+            return hours.toString() + ":" + minutes.toString() + ":" + seconds.toString();
+        return minutes.toString() + ":" + seconds.toString();
+    }
+
     public void setLength(String length) {
         this.length = length;
     }

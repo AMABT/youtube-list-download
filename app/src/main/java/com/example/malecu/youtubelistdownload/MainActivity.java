@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
         setContent(new GetUrlFragment());
 
-        // init rest client
+        // init API Rest Client
         ytRestClient = new YtRestClient(getApplicationContext());
     }
 
@@ -148,21 +148,27 @@ public class MainActivity extends AppCompatActivity
     public void receiveYoutubeUrl(String url) {
 
         final MainActivity mainActivity = this;
-        View spinner = findViewById(R.id.loading_spinner);
+        final View spinner = findViewById(R.id.loading_spinner);
         spinner.setVisibility(View.VISIBLE);
 
-        // TODO Change OnSuccessListener to List<Video>
+        /**
+         * Call the API to get information for current URL - it can return a list of videos or just one (list with one element)
+         * Show video list fragment on success
+         */
         final Cancellable cancellable = ytRestClient.getInfoAsync(url, new OnSuccessListener<List<Video>>() {
             @Override
             public void onSuccess(List<Video> value) {
 
                 final List<Video> videoList = value;
 
+                /**
+                 * The HTTP call runs on different thread, runOnUiThread must be used because we change the active fragment
+                 */
                 mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+                        spinner.setVisibility(View.INVISIBLE);
                         FloatingActionButton fab = (FloatingActionButton) mainActivity.findViewById(R.id.fab);
                         fab.setVisibility(View.VISIBLE);
                         mainActivity.setContent(VideoFragment.newInstance(videoList));
@@ -172,15 +178,20 @@ public class MainActivity extends AppCompatActivity
         }, new OnErrorListener() {
             @Override
             public void onError(Exception exception) {
+                // This function is not called when the action is canceled, spinner hide must be implemented on cancel too
+                spinner.setVisibility(View.INVISIBLE);
                 Log.e(TAG, exception.getMessage());
             }
         });
 
+        /**
+         * Cancel API call on spinner click
+         */
         spinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancellable.cancel();
-                v.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.INVISIBLE);
             }
         });
 
