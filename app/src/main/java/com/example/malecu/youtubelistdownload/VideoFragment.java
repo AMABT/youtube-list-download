@@ -3,6 +3,7 @@ package com.example.malecu.youtubelistdownload;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,11 +24,11 @@ import java.util.List;
 public class VideoFragment extends Fragment implements OnListFragmentInteractionListener {
 
     // TODO: Customize parameter argument names
-    private static final String YT_URL = "yt-url";
+    private static final String YT_LIST = "yt-list";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private final String TAG = "VideoFragment";
-    private String youtubeUrl = null;
+    private List<Video> videoList = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -38,13 +39,15 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
     }
 
     @SuppressWarnings("unused")
-    public static VideoFragment newInstance(String ytUrl) {
+    public static VideoFragment newInstance(List<Video> ytVideoList) {
 
         VideoFragment fragment = new VideoFragment();
 
-        Bundle args = new Bundle();
-        args.putString(YT_URL, ytUrl);
-        fragment.setArguments(args);
+        fragment.setVideoList(ytVideoList);
+//
+//        Bundle args = new Bundle();
+//        args.putParcelableArray(YT_LIST, (Parcelable[]) ytVideoList.toArray());
+//        fragmentgment.setArguments(args);
 
         return fragment;
     }
@@ -54,7 +57,7 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            youtubeUrl = getArguments().getString(YT_URL);
+            //videoList = getArguments().getParcelableArrayList(YT_LIST);
         }
     }
 
@@ -62,7 +65,6 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video_list, container, false);
 
-        Log.i(TAG, "Current url " + youtubeUrl);
         Log.i(TAG, "Set adapter");
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -73,9 +75,13 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyVideoRecyclerViewAdapter(getDummyContent(), this));
+            recyclerView.setAdapter(new MyVideoRecyclerViewAdapter(videoList, this));
         }
         return view;
+    }
+
+    public void setVideoList(List<Video> ytVideoList) {
+        videoList = ytVideoList;
     }
 
     private List<Video> getDummyContent() {

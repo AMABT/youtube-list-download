@@ -1,11 +1,14 @@
 package com.example.malecu.youtubelistdownload;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,9 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnGetUrlFragmentInteractionListener {
+
+    protected String TAG = "MainActivity";
+    protected YtRestClient ytRestClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +54,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setContent(new GetUrl());
+        // show start fragment - input url
+        setContent(new GetUrlFragment());
         fab.setVisibility(View.INVISIBLE);
+
+        // init rest client
+        ytRestClient = new YtRestClient(getApplicationContext());
     }
 
     /**
@@ -110,7 +123,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            setContent(new GetUrl());
+            setContent(new GetUrlFragment());
             fab.setVisibility(View.INVISIBLE);
 
         } else if (id == R.id.nav_gallery) {
@@ -133,8 +146,30 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void receiveYoutubeUrl(String url) {
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        setContent(VideoFragment.newInstance(url));
+        final MainActivity $this = this;
+
+        // TODO Change OnSuccessListener to List<Video>
+        ytRestClient.getInfoAsync(url, new OnSuccessListener<List<Video>>() {
+            @Override
+            public void onSuccess(List<Video> value) {
+
+                final List<Video> videoList = value;
+
+                $this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        FloatingActionButton fab = (FloatingActionButton) $this.findViewById(R.id.fab);
+                        fab.setVisibility(View.VISIBLE);
+                        $this.setContent(VideoFragment.newInstance(videoList));
+                    }
+                });
+            }
+        }, new OnErrorListener() {
+            @Override
+            public void onError(Exception exception) {
+                Log.e(TAG, exception.getMessage());
+            }
+        });
     }
 }

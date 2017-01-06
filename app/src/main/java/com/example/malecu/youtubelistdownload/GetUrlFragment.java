@@ -21,13 +21,13 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GetUrl extends Fragment {
+public class GetUrlFragment extends Fragment {
 
-    protected String TAG = "GetUrl";
+    protected String TAG = "GetUrlFragment";
     protected boolean copyFromClipboardEnabled;
     protected Activity activity;
 
-    public GetUrl() {
+    public GetUrlFragment() {
         // Required empty public constructor
         copyFromClipboardEnabled = true;
     }
