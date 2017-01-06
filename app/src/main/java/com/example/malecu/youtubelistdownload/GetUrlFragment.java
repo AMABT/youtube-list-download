@@ -56,10 +56,10 @@ public class GetUrlFragment extends Fragment {
                     ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
                     ((TextView) view.findViewById(R.id.yt_url)).setText(clipboard.getText());
                 } else {
-                    // This makes sure that the container activity has implemented
+                    // This makes sure that the container context has implemented
                     // the callback interface. If not, it throws an exception
                     try {
-                        // send input url to parent activity
+                        // send input url to parent context
                         OnGetUrlFragmentInteractionListener mCallback = (OnGetUrlFragmentInteractionListener) activity;
                         EditText text = (EditText) view.findViewById(R.id.yt_url);
                         mCallback.receiveYoutubeUrl(text.getText().toString());

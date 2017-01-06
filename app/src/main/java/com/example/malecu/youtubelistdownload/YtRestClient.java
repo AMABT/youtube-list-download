@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -81,6 +82,44 @@ public class YtRestClient {
                             JsonReader reader = new JsonReader(inputStreamReader);
 
                             return new VideoReader().read(reader);
+                        }
+                        return null;
+                    }
+                },
+                onSuccessListener,
+                onErrorListener
+        );
+    }
+
+    /**
+     * Make Http call to API
+     *
+     * @param url               YoutubeUrl to get info for
+     * @param onSuccessListener Object that implements method to call when the result is ready
+     * @param onErrorListener   Object that implements method to call when there is an error
+     * @return an object that can be canceled
+     */
+    public Cancellable downloadVideoAudio(String url, final OnSuccessListener<InputStream> onSuccessListener, final OnErrorListener onErrorListener) {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("action", "download");
+            json.put("url", url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request.Builder builder = new Request.Builder();
+        builder.url(mApiUrl);
+        builder.post(RequestBody.create(MediaType.parse("application/json"), json.toString()));
+
+        return new CancellableOkHttpAsync<>(
+                builder.build(),
+                new ResponseReader<InputStream>() {
+                    @Override
+                    public InputStream read(Response response) throws Exception {
+                        if (response.code() == 200) {
+
+                            return response.body().byteStream();
                         }
                         return null;
                     }

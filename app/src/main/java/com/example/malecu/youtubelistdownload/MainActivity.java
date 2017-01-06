@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.Fragment;
@@ -19,6 +20,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +47,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                downloadFiles();
             }
         });
 
@@ -61,6 +67,10 @@ public class MainActivity extends AppCompatActivity
 
         // init API Rest Client
         ytRestClient = new YtRestClient(getApplicationContext());
+
+        // init helper
+        DownloadList.get().init(getApplicationContext());
+        DownloadList.get().setYtRestClient(ytRestClient);
     }
 
     /**
@@ -103,7 +113,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a parent context in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -159,7 +169,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Video> value) {
 
-                final List<Video> videoList = value;
+                DownloadList.get().setVideoList(value);
 
                 /**
                  * The HTTP call runs on different thread, runOnUiThread must be used because we change the active fragment
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity
                         spinner.setVisibility(View.INVISIBLE);
                         FloatingActionButton fab = (FloatingActionButton) mainActivity.findViewById(R.id.fab);
                         fab.setVisibility(View.VISIBLE);
-                        mainActivity.setContent(VideoFragment.newInstance(videoList));
+                        mainActivity.setContent(VideoFragment.newInstance());
                     }
                 });
             }
@@ -195,5 +205,52 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void downloadFiles() {
+
+        final View spinner = findViewById(R.id.loading_spinner);
+        spinner.setVisibility(View.VISIBLE);
+        final MainActivity mainActivity = this;
+
+        DownloadList.get().downloadVideoList(new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean value) {
+
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setVisibility(View.INVISIBLE);
+                        Snackbar.make(spinner, "Download complete", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
+            }
+        }, new OnErrorListener() {
+            @Override
+            public void onError(Exception exception) {
+
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setVisibility(View.INVISIBLE);
+                        Snackbar.make(spinner, "Download failed", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
+            }
+        });
+
+
+        /**
+         * Cancel API call on spinner click
+         */
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadList.get().cancelDownload();
+                spinner.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }

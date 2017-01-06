@@ -35,19 +35,15 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
      * fragment (e.g. upon screen orientation changes).
      */
     public VideoFragment() {
+
+        videoList = DownloadList.get().getVideoList();
         Log.i(TAG, "VideoFragment init");
     }
 
     @SuppressWarnings("unused")
-    public static VideoFragment newInstance(List<Video> ytVideoList) {
+    public static VideoFragment newInstance() {
 
         VideoFragment fragment = new VideoFragment();
-
-        fragment.setVideoList(ytVideoList);
-//
-//        Bundle args = new Bundle();
-//        args.putParcelableArray(YT_LIST, (Parcelable[]) ytVideoList.toArray());
-//        fragmentgment.setArguments(args);
 
         return fragment;
     }
@@ -55,10 +51,6 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            //videoList = getArguments().getParcelableArrayList(YT_LIST);
-        }
     }
 
     @Override
