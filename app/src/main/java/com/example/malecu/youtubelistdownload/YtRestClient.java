@@ -55,7 +55,6 @@ public class YtRestClient {
         }
         Request.Builder builder = new Request.Builder();
         builder.url(mApiUrl);
-        mOkHttpClient.newBuilder().readTimeout(10, TimeUnit.SECONDS);
         builder.post(RequestBody.create(MediaType.parse("application/json"), json.toString()));
 
         return new CancellableOkHttpAsync<>(
