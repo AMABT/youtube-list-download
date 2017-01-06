@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // show start fragment - input url
-        setContent(new GetUrlFragment());
         fab.setVisibility(View.INVISIBLE);
+        findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+        setContent(new GetUrlFragment());
 
         // init rest client
         ytRestClient = new YtRestClient(getApplicationContext());
@@ -146,7 +147,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void receiveYoutubeUrl(String url) {
 
-        final MainActivity $this = this;
+        final MainActivity mainActivity = this;
+        findViewById(R.id.loading_spinner).setVisibility(View.VISIBLE);
 
         // TODO Change OnSuccessListener to List<Video>
         ytRestClient.getInfoAsync(url, new OnSuccessListener<List<Video>>() {
@@ -155,13 +157,14 @@ public class MainActivity extends AppCompatActivity
 
                 final List<Video> videoList = value;
 
-                $this.runOnUiThread(new Runnable() {
+                mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        FloatingActionButton fab = (FloatingActionButton) $this.findViewById(R.id.fab);
+                        findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+                        FloatingActionButton fab = (FloatingActionButton) mainActivity.findViewById(R.id.fab);
                         fab.setVisibility(View.VISIBLE);
-                        $this.setContent(VideoFragment.newInstance(videoList));
+                        mainActivity.setContent(VideoFragment.newInstance(videoList));
                     }
                 });
             }
