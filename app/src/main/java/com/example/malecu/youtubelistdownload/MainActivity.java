@@ -148,10 +148,11 @@ public class MainActivity extends AppCompatActivity
     public void receiveYoutubeUrl(String url) {
 
         final MainActivity mainActivity = this;
-        findViewById(R.id.loading_spinner).setVisibility(View.VISIBLE);
+        View spinner = findViewById(R.id.loading_spinner);
+        spinner.setVisibility(View.VISIBLE);
 
         // TODO Change OnSuccessListener to List<Video>
-        ytRestClient.getInfoAsync(url, new OnSuccessListener<List<Video>>() {
+        final Cancellable cancellable = ytRestClient.getInfoAsync(url, new OnSuccessListener<List<Video>>() {
             @Override
             public void onSuccess(List<Video> value) {
 
@@ -174,5 +175,14 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, exception.getMessage());
             }
         });
+
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancellable.cancel();
+                v.setVisibility(View.INVISIBLE);
+            }
+        });
+
     }
 }
