@@ -1,15 +1,19 @@
 package com.example.malecu.youtubelistdownload;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         ytRestClient = new YtRestClient(getApplicationContext());
 
         // init helper
-        DownloadList.get().init(getApplicationContext());
+        DownloadList.get().init(this);
         DownloadList.get().setYtRestClient(ytRestClient);
 
         // show start fragment - input url
@@ -197,9 +201,16 @@ public class MainActivity extends AppCompatActivity
         }, new OnErrorListener() {
             @Override
             public void onError(Exception exception) {
+
+                final Exception e = exception;
                 // This function is not called when the action is canceled, spinner hide must be implemented on cancel too
-                spinner.setVisibility(View.INVISIBLE);
-                Log.e(TAG, exception.getMessage());
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setVisibility(View.INVISIBLE);
+                        showInfo(getString(R.string.server_error));
+                    }
+                });
             }
         });
 
@@ -218,48 +229,78 @@ public class MainActivity extends AppCompatActivity
 
     private void downloadFiles() {
 
-        final View spinner = findViewById(R.id.loading_spinner);
-        spinner.setVisibility(View.VISIBLE);
-        final MainActivity mainActivity = this;
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setRippleColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        DownloadList.get().downloadVideoList(new OnSuccessListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean value) {
+        // Check for permissions before executing action
+        if (isStoragePermissionGranted()) {
 
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinner.setVisibility(View.INVISIBLE);
-                        Snackbar.make(spinner, "Download complete", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-            }
-        }, new OnErrorListener() {
-            @Override
-            public void onError(Exception exception) {
+            final View spinner = findViewById(R.id.loading_spinner);
+            spinner.setVisibility(View.VISIBLE);
+            final MainActivity mainActivity = this;
 
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinner.setVisibility(View.INVISIBLE);
-                        Snackbar.make(spinner, "Download failed", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-            }
-        });
+            DownloadList.get().downloadVideoList(new OnSuccessListener<Boolean>() {
+                @Override
+                public void onSuccess(Boolean value) {
 
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            spinner.setVisibility(View.INVISIBLE);
+                            showInfo(getString(R.string.download_complete));
+                        }
+                    });
+                }
+            }, new OnErrorListener() {
+                @Override
+                public void onError(Exception exception) {
 
-        /**
-         * Cancel API call on spinner click
-         */
-        spinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DownloadList.get().cancelDownload();
-                spinner.setVisibility(View.INVISIBLE);
-            }
-        });
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            spinner.setVisibility(View.INVISIBLE);
+                            showInfo(getString(R.string.download_failed));
+                        }
+                    });
+                }
+            });
+
+            /**
+             * Cancel API call on spinner click
+             */
+            spinner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DownloadList.get().cancelDownload();
+                    spinner.setVisibility(View.INVISIBLE);
+                }
+            });
+        } else {
+            showInfo(getString(R.string.missing_external));
+        }
     }
+
+    private void showInfo(String text) {
+
+        Snackbar.make(findViewById(R.id.fab), text, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Action", null).show();
+    }
+
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            // Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }
+
 }

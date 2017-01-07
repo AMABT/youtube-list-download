@@ -1,5 +1,6 @@
 package com.example.malecu.youtubelistdownload;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,9 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -33,6 +38,7 @@ public class GetUrlFragment extends Fragment {
         copyFromClipboardEnabled = true;
     }
 
+    @SuppressLint("ValidFragment")
     public GetUrlFragment(String url) {
         ytUrl = url;
     }
@@ -63,10 +69,18 @@ public class GetUrlFragment extends Fragment {
                     // This makes sure that the container context has implemented
                     // the callback interface. If not, it throws an exception
                     try {
+                        // Hide keyboard
+                        View view = activity.getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
                         // send input url to parent context
                         OnGetUrlFragmentInteractionListener mCallback = (OnGetUrlFragmentInteractionListener) activity;
                         EditText text = (EditText) view.findViewById(R.id.yt_url);
-                        mCallback.receiveYoutubeUrl(text.getText().toString());
+
+                        mCallback.receiveYoutubeUrl(cleanUrl(text.getText().toString()));
+
                     } catch (ClassCastException e) {
                         throw new ClassCastException(activity.toString()
                                 + " must implement OnGetUrlFragmentInteractionListener");
@@ -108,6 +122,16 @@ public class GetUrlFragment extends Fragment {
         }
 
         return view;
+    }
+
+    protected String cleanUrl(String url) {
+        Pattern r = Pattern.compile("(http.*)");
+        Matcher m = r.matcher(url);
+        if (m.find()) {
+            Log.i(TAG, m.group(0));
+            return m.group(0);
+        }
+        return "";
     }
 
     @Override

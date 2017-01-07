@@ -13,7 +13,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecyclerViewAdapter.ViewHolder> {
+public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecyclerViewAdapter.ViewHolder> implements OnListChange {
 
     private final List<Video> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -53,6 +53,11 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    @Override
+    public void notifyListChange() {
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

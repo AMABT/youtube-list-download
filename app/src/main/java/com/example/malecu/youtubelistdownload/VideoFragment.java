@@ -67,7 +67,10 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyVideoRecyclerViewAdapter(videoList, this));
+            MyVideoRecyclerViewAdapter adapter = new MyVideoRecyclerViewAdapter(videoList, this);
+            recyclerView.setAdapter(adapter);
+            // On download refresh
+            DownloadList.get().listenForListChange(adapter);
         }
         return view;
     }

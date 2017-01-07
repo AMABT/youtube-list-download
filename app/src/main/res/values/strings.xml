@@ -13,4 +13,8 @@
     <string name="submit_button_url">Get info &amp; download</string>
     <string name="api_url">http://192.168.0.129/youtube-download/index.php</string>
     <string name="main_folder">youtube_list_mp3</string>
+    <string name="download_failed">Download failed</string>
+    <string name="download_complete">Download complete</string>
+    <string name="server_error">Server error</string>
+    <string name="missing_external">Missing read/write permissions</string>
 </resources>
