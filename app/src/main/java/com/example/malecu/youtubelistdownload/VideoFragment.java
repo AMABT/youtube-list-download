@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,17 +61,30 @@ public class VideoFragment extends Fragment implements OnListFragmentInteraction
         Log.i(TAG, "Set adapter");
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
+
+            final Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
             MyVideoRecyclerViewAdapter adapter = new MyVideoRecyclerViewAdapter(videoList, this);
             recyclerView.setAdapter(adapter);
-            // On download refresh
+
+            // On download finished refresh video list
             DownloadList.get().listenForListChange(adapter);
+            // Vibrate too on download finished
+            DownloadList.get().listenForListChange(new OnListChange() {
+                @Override
+                public void notifyListChange() {
+                    Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    v.vibrate(100);
+                }
+            });
         }
         return view;
     }

@@ -70,6 +70,7 @@ public class DownloadList {
         Log.i(TAG, "Downloading " + video.getUrl());
 
         video.setStatus(Video.VideoStatus.DOWNLOADING);
+        videoListChanged();
 
         cancellable = ytRestClient.downloadVideoAudio(video.getUrl(), new OnSuccessListener<InputStream>() {
             @Override
