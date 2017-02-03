@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.malecu.youtubelistdownload.Net.OnGetUrlFragmentInteractionListener;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -1,8 +1,10 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Net;
 
 /**
  * Created by malecu on 05/01/17.
  */
+
+import com.example.malecu.youtubelistdownload.Domain.Video;
 
 /**
  * This interface must be implemented by activities that contain this

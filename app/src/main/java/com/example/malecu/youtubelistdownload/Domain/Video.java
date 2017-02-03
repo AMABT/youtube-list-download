@@ -1,4 +1,4 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Domain;
 
 import android.os.Parcel;
 import android.os.Parcelable;

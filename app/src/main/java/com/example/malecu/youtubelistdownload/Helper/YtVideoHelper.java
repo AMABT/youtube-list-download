@@ -1,13 +1,10 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Helper;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import com.example.malecu.youtubelistdownload.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

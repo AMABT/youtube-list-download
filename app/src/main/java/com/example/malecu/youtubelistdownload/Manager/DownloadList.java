@@ -1,9 +1,15 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Manager;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.util.Log;
+
+import com.example.malecu.youtubelistdownload.Net.Cancellable;
+import com.example.malecu.youtubelistdownload.Net.OnErrorListener;
+import com.example.malecu.youtubelistdownload.Net.OnListChange;
+import com.example.malecu.youtubelistdownload.Net.OnSuccessListener;
+import com.example.malecu.youtubelistdownload.Domain.Video;
+import com.example.malecu.youtubelistdownload.Net.YtRestClient;
+import com.example.malecu.youtubelistdownload.Helper.YtVideoHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;

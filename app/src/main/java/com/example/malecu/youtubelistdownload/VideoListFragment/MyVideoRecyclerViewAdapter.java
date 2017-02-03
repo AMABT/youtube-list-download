@@ -1,10 +1,15 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.VideoListFragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.malecu.youtubelistdownload.Domain.Video;
+import com.example.malecu.youtubelistdownload.Net.OnListChange;
+import com.example.malecu.youtubelistdownload.Net.OnListFragmentInteractionListener;
+import com.example.malecu.youtubelistdownload.R;
 
 import java.util.List;
 

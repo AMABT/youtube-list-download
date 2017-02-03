@@ -1,23 +1,24 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Net;
 
 import android.content.Context;
-import android.provider.MediaStore;
-import android.text.format.Time;
 import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
+
+import com.example.malecu.youtubelistdownload.Domain.Video;
+import com.example.malecu.youtubelistdownload.Net.Cancellable;
+import com.example.malecu.youtubelistdownload.Net.OnErrorListener;
+import com.example.malecu.youtubelistdownload.Net.OnSuccessListener;
+import com.example.malecu.youtubelistdownload.Net.ResourceException;
+import com.example.malecu.youtubelistdownload.Net.VideoReader;
+import com.example.malecu.youtubelistdownload.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;

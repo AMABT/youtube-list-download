@@ -1,11 +1,12 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.Net;
 
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import com.example.malecu.youtubelistdownload.Domain.Video;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;

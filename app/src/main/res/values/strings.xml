@@ -11,7 +11,7 @@
     <string name="url_hint">Youtube video/playlist url</string>
     <string name="submit_button">Copy from clipboard</string>
     <string name="submit_button_url">Get info &amp; download</string>
-    <string name="api_url">http://192.168.0.101/youtube-download/index.php</string>
+    <string name="api_url">http://10.0.2.2/youtube-download/index.php</string>
     <string name="main_folder">youtube_list_mp3</string>
     <string name="download_failed">Download failed</string>
     <string name="download_complete">Download complete</string>

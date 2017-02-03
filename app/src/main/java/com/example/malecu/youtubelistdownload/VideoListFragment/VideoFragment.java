@@ -1,9 +1,8 @@
-package com.example.malecu.youtubelistdownload;
+package com.example.malecu.youtubelistdownload.VideoListFragment;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.malecu.youtubelistdownload.Domain.Video;
+import com.example.malecu.youtubelistdownload.Manager.DownloadList;
+import com.example.malecu.youtubelistdownload.Net.OnListChange;
+import com.example.malecu.youtubelistdownload.Net.OnListFragmentInteractionListener;
+import com.example.malecu.youtubelistdownload.R;
 
 import java.util.ArrayList;
 import java.util.List;

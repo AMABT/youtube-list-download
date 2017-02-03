@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.malecu.youtubelistdownload.VideoFragment"
+    tools:context="com.example.malecu.youtubelistdownload.VideoListFragment.VideoFragment"
     tools:listitem="@layout/fragment_video"
     android:clipToPadding="true"
     app:layout_scrollFlags="scroll"
